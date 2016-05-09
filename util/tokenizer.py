@@ -1,6 +1,6 @@
 import re
 
-word_split = re.complie(b"([.,!?\"':;)(])")
+word_split = re.compile(b"([.,!?\"':;)(])")
 
 
 def basic_tokenizer(seq):
