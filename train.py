@@ -12,10 +12,11 @@ from models.chatbot import ChatbotModel
 
 ## CONSTANTS
 flags = tf.app.flags
+FLAGS = flags.FLAGS
 flags.DEFINE_float("learning_rate", 0.5, "learning rate")
 flags.DEFINE_float("decay_factor", 0.99, "learning rate decay rate")
 flags.DEFINE_float("grad_clip", 5.0, "clip gradients to this norm")
-flags.DEFINE_float("train_frac", 0.7, "% data to used for training")
+flags.DEFINE_float("train_frac", 0.7, "data to used for training")
 flags.DEFINE_float("dropout", 0.5, "probability of hidden inputs being removed")
 flags.DEFINE_integer("batch_size", 5, "batch size to use during training.")
 flags.DEFINE_integer("max_epoch", 6, "max number of iterations of training set")
@@ -33,7 +34,6 @@ max_tgt_len = 200
 max_src_len = 200
 
 buckets = [(40,10),(50,15),(100,25), (200,200)]
-ckpt_path = os.path.join(FLAGS.checkpoint_dir, 'ckpt')
 max_loss = 300
 
 def getModel(session, path, vocab_size):
@@ -167,6 +167,7 @@ def main():
 
             prev_loss.append(loss)
 
+            ckpt_path = os.path.join(FLAGS.checkpoint_dir, 'ckpt')
             model.saver.save(sess, ckpt_path, global_step=model.global_step)
             step_time, loss = 0.0, 0.0
 
