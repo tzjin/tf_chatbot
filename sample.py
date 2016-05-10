@@ -17,7 +17,7 @@ max_tr_len = 0
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
-flags.DEFINE_string('checkpoint_dir', 'data/checkpoints/1461979205hiddensize_100_dropout_0.5_numlayers_1', 'Directory to store/restore checkpoints')
+flags.DEFINE_string('checkpoint_dir', 'data/checkpoints/', 'Directory to store/restore checkpoints')
 flags.DEFINE_string('data_dir', "data/", "Data storage directory")
 
 def loadModel(session, path):
@@ -41,7 +41,7 @@ def loadModel(session, path):
 	_buckets = bucks
 	model = models.chatbot.ChatbotModel(prms["vocab_size"], _buckets,
 		prms["hidden_size"], 1.0, prms["num_layers"], prms["grad_clip"],
-		1, prms["learning_rate"], prms["lr_decay_factor"], 512, True)
+		1, prms["learning_rate"], prms["decay_factor"], 512, True)
 
 	checkpt = tf.train.get_checkpoint_state(path)
 
@@ -77,7 +77,7 @@ def main():
 			buck_id = min(newls)
 
 			enc_in, dec_in, targ_weights = model.get_batch(
-				{bucket_id: [(tok_ids, [])]}, buck_id)
+				{buck_id: [(tok_ids, [])]}, buck_id)
 
 			_, _, output_logits = model.step(sess, enc_in, dec_in, targ_weights,
 				buck_id, True)
