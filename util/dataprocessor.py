@@ -93,7 +93,7 @@ class DataProcessor(object):
 
             print "Done data pre-processing..."
 
-    def loopParseTextFiles(self, text_files, is_train):
+    def loopParseTextFiles(self, text_files):
         for text_file in text_files[0]:
         	self.parseTextFile(text_file, is_train)
 
