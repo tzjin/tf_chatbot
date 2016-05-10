@@ -10,12 +10,12 @@ Chatbot implemented using TensorFlow
 ### Usage
 
 Training: 
-'python train.py'
+`python train.py`
 
 Sampling:
-'python sample.py'
+`python sample.py`
 
-For additional help, run either command with the '-h' flag.
+For additional help, run either command with the `-h` flag.
 
 ### Other Datasets
 New data can be used by replacing the current file in data/raw_data.
