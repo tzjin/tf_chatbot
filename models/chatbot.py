@@ -1,12 +1,12 @@
 import random
-import numpy as numpy
+import numpy as np
 import tensorflow as tf 
 from tensorflow.models.rnn import rnn, rnn_cell, seq2seq
 from util.vocabutils import PAD_ID, GO_ID
 
 class ChatbotModel(object):
-   def __init__(self, vocab_size, hidden_size, dropout, 
-      num_layers, grad_clip, batch_size, learning_rate, decay_factor, 
+   def __init__(self, vocab_size, buckets, hidden_size, dropout, 
+      num_layers, max_gradient_norm, batch_size, learning_rate, decay_factor, 
       num_samples=512, forward_only=False):
 
       self.device = "/cpu:0"
@@ -16,7 +16,7 @@ class ChatbotModel(object):
       self.batch_size = batch_size
       self.learning_rate = tf.Variable(float(learning_rate), trainable=False)
       self.learning_rate_decay_op = self.learning_rate.assign(
-         self.learning_rate * lr_decay_factor)
+         self.learning_rate * decay_factor)
       self.global_step = tf.Variable(0, trainable=False)
       self.dropout_keep_prob_lstm_input = tf.constant(self.dropout)
       self.dropout_keep_prob_lstm_output = tf.constant(self.dropout)
@@ -27,7 +27,7 @@ class ChatbotModel(object):
       if num_samples > self.vocab_size:
          num_samples = self.vocab_size - 1
       if num_samples > 0 and num_samples < self.vocab_size:
-         with tf.device(device):
+         with tf.device(self.device):
             w = tf.get_variable("proj_w", [hidden_size, self.vocab_size])
             w_t = tf.transpose(w)
             b = tf.get_variable("proj_b", [self.vocab_size])
@@ -35,7 +35,7 @@ class ChatbotModel(object):
 
 
       def sampled_loss(inputs, labels):
-         with tf.device("/cpu:0"):
+         with tf.device(self.device):
             labels = tf.reshape(labels, [-1, 1])
             return tf.nn.sampled_softmax_loss(w_t, b, inputs, 
                labels, num_samples, self.vocab_size)
@@ -120,12 +120,12 @@ class ChatbotModel(object):
       for _ in xrange(self.batch_size):
          encoder_input, decoder_input = random.choice(data[bucket_id])
 
-         encoder_pad = [vocab_utils.PAD_ID] * (encoder_size - len(encoder_input))
+         encoder_pad = [PAD_ID] * (encoder_size - len(encoder_input))
          encoder_inputs.append(encoder_input + encoder_pad)
 
          decoder_pad_size = decoder_size - len(decoder_input) - 1
-         decoder_inputs.append([vocab_utils.GO_ID] + decoder_input +
-            [vocab_utils.PAD_ID] * decoder_pad_size)
+         decoder_inputs.append([GO_ID] + decoder_input +
+            [PAD_ID] * decoder_pad_size)
 
          # Now we create batch-major vectors from the data selected above.
       batch_encoder_inputs, batch_decoder_inputs, batch_weights = [], [], []
@@ -149,7 +149,7 @@ class ChatbotModel(object):
             # The corresponding target is decoder_input shifted by 1 forward.
             if length_idx < decoder_size - 1:
                target = decoder_inputs[batch_idx][length_idx + 1]
-            if length_idx == decoder_size - 1 or target == vocab_utils.PAD_ID:
+            if length_idx == decoder_size - 1 or target == PAD_ID:
                batch_weight[batch_idx] = 0.0
          batch_weights.append(batch_weight)
       return batch_encoder_inputs, batch_decoder_inputs, batch_weights

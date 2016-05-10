@@ -10,7 +10,7 @@ from math import floor
 
 class DataProcessor(object):
     def __init__(self, max_vocab_size, source_data_path,
-    processed_data_path, train_frac, tokenizer_str,
+    processed_data_path, train_frac,
     num_lines=4, max_target_length=50, max_source_length=200):
         
         self.MAX_SOURCE_TOKEN_LENGTH = max_source_length

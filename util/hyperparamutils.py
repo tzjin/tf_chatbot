@@ -16,7 +16,7 @@ def saveHyperParameters(check, FLAGS, buck, conv_lim):
 	params_dict["grad_clip"] = FLAGS.grad_clip
 	params_dict["num_layers"] = FLAGS.num_layers
 	params_dict["learning_rate"] = FLAGS.learning_rate
-	params_dict["lr_decay_factor"] = FLAGS.lr_decay_factor
+	params_dict["decay_factor"] = FLAGS.decay_factor
 	params_dict["num_buckets"] = len(buck)
 	params_dict["max_source_length"] = conv_lim[0]
 	params_dict["max_target_length"] = conv_lim[1]
@@ -31,4 +31,4 @@ def saveHyperParameters(check, FLAGS, buck, conv_lim):
 
 	check_path = os.path.join(check, "hyperparams.p")
 	with open(check_path, 'wb') as file:
-		pickle.dumb(params_dict, file)
+		pickle.dump(params_dict, file)
