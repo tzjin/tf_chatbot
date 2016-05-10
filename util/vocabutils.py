@@ -68,7 +68,7 @@ class VocabMapper(object):
 		else:
 			self.tokenzr = tokenzr
 
-		voc_path = os.path.join(self.d_path, "vocab.txt")
+		voc_path = os.path.join(d_path, "vocab.txt")
 		exists = gfile.Exists(voc_path)
 
 		if exists:
