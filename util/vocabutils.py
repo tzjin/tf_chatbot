@@ -55,7 +55,7 @@ class VocabBuilder(object):
 
 		voc_path = os.path.join(self.d_path, "vocab.txt")
 
-		with gfile.Gfile(voc_path, mode="wb") as file:
+		with gfile.GFile(voc_path, mode="wb") as file:
 			for voc_word in voc_ls:
 				file.write(voc_word + b"\n")
 
@@ -73,7 +73,7 @@ class VocabMapper(object):
 
 		if exists:
 			rev_voc = []
-			with gfile.Gfile(voc_path, mode="rb") as file:
+			with gfile.GFile(voc_path, mode="rb") as file:
 				rev_voc.extend(file.readlines())
 			rev_voc = [line.strip() for line in rev_voc]
 			enumerated = enumerate(rev_voc)
