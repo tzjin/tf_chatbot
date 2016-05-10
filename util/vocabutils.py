@@ -2,6 +2,7 @@ import pickle
 import util.tokenizer
 import re
 import os
+import tensorflow as tf
 from tensorflow.python.platform import gfile
 
 _PAD = b"_PAD"
@@ -40,7 +41,7 @@ class VocabBuilder(object):
 		for tok in word_toks:
 			word = tok
 			if norm_dig:
-				word = re.sub(digits, b"0", w)
+				word = re.sub(digits, b"0", tok)
 
 			if word in self.vocab:
 				self.vocab[word] += 1
