@@ -24,7 +24,7 @@ class ChatbotModel(object):
       output_projection = None
       softmax_loss_function = None
 
-      if num_samples > self.vocab_size
+      if num_samples > self.vocab_size:
          num_samples = self.vocab_size - 1
       if num_samples > 0 and num_samples < self.vocab_size:
          with tf.device(device):
