@@ -3,10 +3,10 @@ import math, os, random, sys, time
 import numpy as numpy
 
 # from six.moves import xrange
-import tensorflow as tensorflow
+import tensorflow as tf
 from tensorflow.python.platform import gfile
 import util.hyperparamutils as hp 
-from util.vocabutils as VocabMapper, EOS_ID
+from util.vocabutils import VocabMapper, EOS_ID
 from util.dataprocessor import DataProcessor
 from models.chatbot import ChatbotModel
 
@@ -32,7 +32,7 @@ max_num_lines = 1
 max_tgt_len = 200
 max_src_len = 200
 
-buckets = [(40,10),(50,15),(100,25)(200,200)]
+buckets = [(40,10),(50,15),(100,25), (200,200)]
 ckpt_path = os.path.join(FLAGS.checkpoint_dir, 'ckpt')
 max_loss = 300
 
@@ -79,8 +79,8 @@ def readData(src_path, tgt_path):
 def main():
 
    # create checkpoint directory if needed
-   if not os.path.exists(chkpt_dir):
-      os.mkdir(chkpt_dir)
+   if not os.path.exists(FLAGS.checkpoint_dir):
+      os.mkdir(FLAGS.checkpoint_dir)
 
    # run data processor to build training and testing sets
    data_processor = DataProcessor(FLAGS.vocab_size, FLAGS.raw_data_dir, 
@@ -174,8 +174,7 @@ def main():
                if len(test_set[bucket_id]) == 0:
                   print "\tempty bucket %d" % bucket_id
                   continue
-               enc_inputs, dec_inputs, tgt_weights = 
-                  model.get_batch(train_set, bucket_id)
+               enc_inputs, dec_inputs, tgt_weights = model.get_batch(train_set, bucket_id)
                _, eval_loss, _ = model.step(sess, enc_inputs, dec_inputs, 
                   tgt_weights, bucket_id, True)
                eval_ppx = math.exp(eval_loss) if eval_loss < max_loss else float('inf')
@@ -193,3 +192,5 @@ def main():
 
             sys.stdout.flush()
 
+if __name__ == '__main__':
+   main()

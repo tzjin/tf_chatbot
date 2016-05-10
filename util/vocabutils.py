@@ -2,6 +2,7 @@ import pickle
 import util.tokenizer
 import re
 import os
+import tensorflow as tf
 from tensorflow.python.platform import gfile
 
 _PAD = b"_PAD"
